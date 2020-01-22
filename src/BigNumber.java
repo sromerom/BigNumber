@@ -1,5 +1,3 @@
-import javafx.scene.effect.Blend;
-
 public class BigNumber {
     private String s;
 
@@ -105,7 +103,51 @@ public class BigNumber {
 
     // Multiplica
     BigNumber mult(BigNumber other) {
-        return new BigNumber("");
+        String s1 = llevaZeros(this.s);
+        String s2 = llevaZeros(other.s);
+
+        System.out.println(s1);
+        System.out.println(s2);
+        int operacio = 0;
+        String res = "";
+        int aux = 0;
+        BigNumber sumaOperacionsTotals = new BigNumber("0");
+        for (int i = 1; i < s2.length() + 1; i++) {
+            res = "";
+            String s2Xifra = Character.toString(s2.charAt(s2.length() - i));
+            for (int j = 1; j < s1.length() + 1; j++) {
+                String s1Xifra = Character.toString(s1.charAt(s1.length() - j));
+                System.out.println(s2Xifra);
+                System.out.println(s1Xifra);
+
+                operacio = Integer.parseInt(s1Xifra) * Integer.parseInt(s2Xifra) + aux;
+                aux = 0;
+                if (operacio < 10) {
+                    //sb.append(sumaActual);
+                    res = res + operacio;
+                } else if (operacio > 9 && i < s1.length()) {
+                    String seperaDigits = Integer.toString(operacio);
+                    int desena = Character.getNumericValue(seperaDigits.charAt(0));
+                    int unitat = Character.getNumericValue(seperaDigits.charAt(1));
+
+                    //sb.append(unitat);
+                    res = res + unitat;
+                    aux = desena;
+                } else if (operacio > 9 && i == s1.length()) {
+                    //sb.append(giraResultat(Integer.toString(sumaActual)));
+                    res = res + giraResultat(Integer.toString(operacio));
+                }
+            }
+
+
+            res = giraResultat(res);
+            res = afegeixZeros(res, i - 1);
+            BigNumber b = new BigNumber(res);
+            sumaOperacionsTotals = b.add(sumaOperacionsTotals);
+            System.out.println(sumaOperacionsTotals.toString());
+        }
+        System.out.println("Resultat: " + sumaOperacionsTotals);
+        return sumaOperacionsTotals;
     }
 
     // Divideix
@@ -141,16 +183,11 @@ public class BigNumber {
             return -1;
         } else { //Son d'igual tamany
             for (int i = 0; i < s1.length(); i++) {
-                int actualXifraS1 = Character.getNumericValue(s1.charAt(i));
-                int actualXifraS2 = Character.getNumericValue(s2.charAt(i));
-                //System.out.println("Son iguales? " + actualXifraS1 + " --> " + actualXifraS2);
-                if (actualXifraS1 != actualXifraS2) {
-                    if (actualXifraS1 > actualXifraS2) {
+                if (s1.charAt(i) != s2.charAt(i)) {
+                    if (s1.charAt(i) > s2.charAt(i)) {
                         return 1;
-                    } else if (actualXifraS1 < actualXifraS2) {
-                        return -1;
                     } else {
-                        return 0;
+                        return -1;
                     }
                 }
             }
@@ -198,6 +235,15 @@ public class BigNumber {
             }
 
         }
+        return res;
+    }
+
+    public String afegeixZeros(String s, int quantitatZeros) {
+        String res = s;
+        for (int i = 0; i < quantitatZeros; i++) {
+            res = res + 0;
+        }
+
         return res;
     }
 
