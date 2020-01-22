@@ -2,6 +2,7 @@ import javafx.scene.effect.Blend;
 
 public class BigNumber {
     private String s;
+
     // Constructor 1
     public BigNumber(String s) {
         this.s = s;
@@ -32,7 +33,7 @@ public class BigNumber {
             int actualXifraS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
             int actualXifraS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
             System.out.println("s1: " + actualXifraS1);
-            System.out.println("s2: " +  actualXifraS2);
+            System.out.println("s2: " + actualXifraS2);
 
             //Començam a operar
             int sumaActual = actualXifraS1 + actualXifraS2 + aux;
@@ -59,7 +60,47 @@ public class BigNumber {
 
     // Resta
     BigNumber sub(BigNumber other) {
-        return new BigNumber("");
+        String res = "";
+        //StringBuilder sb = new StringBuilder();
+        String s1 = llevaZeros(this.s);
+        String s2 = llevaZeros(other.s);
+
+        //Preparam la suma
+        if (s1.length() > s2.length()) {
+            s2 = preparaSuma(s2, s1.length());
+        } else if (s1.length() < s2.length()) {
+            s1 = preparaSuma(s1, s2.length());
+        }
+
+        System.out.println("s1 length: " + s1.length());
+        System.out.println("s2 length: " + s2.length());
+        int aux = 0;
+        for (int i = 1; i < s1.length() + 1; i++) {
+            int actualXifraS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
+            int actualXifraS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
+            System.out.println("s1: " + actualXifraS1);
+            System.out.println("s2: " + actualXifraS2);
+
+            int operacio = 0;
+            if (actualXifraS1 == actualXifraS2 || actualXifraS1 > actualXifraS2) {
+                if (actualXifraS1 == actualXifraS2 && aux == 1) {
+                    operacio = (actualXifraS1 + 10 - aux) - actualXifraS2;
+                    aux = 1;
+                } else {
+                    operacio = (actualXifraS1 - aux) - actualXifraS2;
+                    aux = 0;
+                }
+            } else {
+                operacio = (actualXifraS1 + 10 - aux) - actualXifraS2;
+                aux = 1;
+
+            }
+
+            res = res + operacio;
+        }
+
+        System.out.println("resultat sense girar: " + res);
+        return new BigNumber(giraResultat(res));
     }
 
     // Multiplica
@@ -84,7 +125,7 @@ public class BigNumber {
         return new BigNumber("");
     }
 
-    BigNumber mcd (BigNumber other) {
+    BigNumber mcd(BigNumber other) {
         return new BigNumber("");
     }
 
