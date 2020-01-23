@@ -153,7 +153,6 @@ public class BigNumberTest {
 
         BigNumber b1, b2;
 
-        /*
         b1 = new BigNumber("2");
         b2 = new BigNumber("02");
         assertEquals(b1, b2);
@@ -190,7 +189,7 @@ public class BigNumberTest {
         assertEquals(new BigNumber("633347954654537795652"), b1.mult(b2));
 
 
-         */
+
         b1 = new BigNumber("99999999999999999999999");
         b2 = new BigNumber("9999999999999999999999");
         assertEquals(new BigNumber("999999999999999999999890000000000000000000001"), b1.mult(b2));

@@ -125,7 +125,7 @@ public class BigNumber {
                 if (operacio < 10) {
                     //sb.append(sumaActual);
                     res = res + operacio;
-                } else if (operacio > 9 && i < s1.length()) {
+                } else if (operacio > 9 && j < s1.length()) {
                     String seperaDigits = Integer.toString(operacio);
                     int desena = Character.getNumericValue(seperaDigits.charAt(0));
                     int unitat = Character.getNumericValue(seperaDigits.charAt(1));
@@ -133,7 +133,7 @@ public class BigNumber {
                     //sb.append(unitat);
                     res = res + unitat;
                     aux = desena;
-                } else if (operacio > 9 && i == s1.length()) {
+                } else if (operacio > 9 && j == s1.length()) {
                     //sb.append(giraResultat(Integer.toString(sumaActual)));
                     res = res + giraResultat(Integer.toString(operacio));
                 }
