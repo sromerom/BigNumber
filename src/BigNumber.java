@@ -152,7 +152,78 @@ public class BigNumber {
 
     // Divideix
     BigNumber div(BigNumber other) {
-        return new BigNumber("");
+        String s1 = llevaZeros(this.s);
+        String s2 = llevaZeros(other.s);
+        System.out.println(s1);
+        System.out.println(s2);
+
+        if (s1.length() == s2.length()) {
+            return new BigNumber("1");
+        }
+
+        if (s1.length() < s2.length()) {
+            return new BigNumber("0");
+        }
+
+        ////////////////BigNumber dividend = new BigNumber(Character.toString(s1.charAt(0)));
+        BigNumber dividend = new BigNumber(s1);
+        BigNumber divisor = new BigNumber(s2);
+        BigNumber resultatDivisio = new BigNumber("");
+        BigNumber partDividend = new BigNumber("");
+        int posicionament = 0;
+
+        for (int j = 0; j < s2.length() + 1; j++) {
+            posicionament++;
+            partDividend.s = partDividend.s + Integer.toString(Character.getNumericValue(s1.charAt(j)));
+            if (partDividend.compareTo(divisor) == 1) {
+                break;
+            }
+        }
+
+        while (posicionament <= s1.length()) {
+            /*
+            System.out.println(dividend.compareTo(divisor));
+            while (dividend.compareTo(divisor) == -1) {
+                if (i == 0) {
+                    i++;
+                    continue;
+                }
+                dividend.s += Character.getNumericValue(s1.charAt(i));
+                i++;
+            }
+             */
+            System.out.println(partDividend.s);
+
+
+            int quocient = 1;
+            BigNumber resultatQuocient = new BigNumber("1");
+
+            System.out.println(resultatQuocient);
+            System.out.println(partDividend);
+            while (resultatQuocient.compareTo(partDividend) == -1) {
+                resultatQuocient = divisor.mult(new BigNumber(Integer.toString(quocient)));
+                System.out.println(resultatQuocient);
+                if (divisor.mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(partDividend) == 1) {
+                    break;
+                }
+                quocient++;
+            }
+
+            BigNumber resta = new BigNumber("");
+            resta = partDividend.sub(resultatQuocient);
+            resta.s = llevaZeros(resta.s);
+
+
+            resultatDivisio.s = resultatDivisio.s + quocient;
+            //resta.s = resta.s + Integer.toString(Character.getNumericValue(s1.charAt(i)));
+            if (posicionament == s1.length()) {
+                break;
+            } else {
+                partDividend.s = resta.s + Character.toString(s1.charAt(posicionament));
+            }
+            posicionament++;
+        }
+        return resultatDivisio;
     }
 
     BigNumber sqrt() {
@@ -270,4 +341,6 @@ public class BigNumber {
         System.out.println(res);
         return res;
     }
+
+
 }
