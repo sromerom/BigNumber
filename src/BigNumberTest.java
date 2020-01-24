@@ -230,12 +230,10 @@ public class BigNumberTest {
         b2 = new BigNumber("45634563456345634563456546799008905634563456456");
         assertEquals(new BigNumber("993"), b1.div(b2));
 
-        /*
         b1 = new BigNumber("2134345456123486126462457864246456434312345");
         b2 = new BigNumber("4534564545645644564564567861534978978512");
         assertEquals(new BigNumber("470"), b1.div(b2));
 
-         */
         b1 = new BigNumber("12345645634563456345656767878967894");
         b2 = new BigNumber("22");
         assertEquals(new BigNumber("561165710661975288438943994498540"), b1.div(b2));

@@ -193,7 +193,17 @@ public class BigNumber {
             }
              */
             System.out.println(partDividend.s);
-
+            if (partDividend.compareTo(divisor) == -1) {
+                System.out.println("cero al quocient i baixam la xifra següent");
+                resultatDivisio.s = resultatDivisio.s + 0;
+                if (posicionament != s1.length()) {
+                    partDividend.s = partDividend.s + Character.toString(s1.charAt(posicionament));
+                    posicionament++;
+                } else {
+                    posicionament++;
+                }
+                continue;
+            }
 
             int quocient = 1;
             BigNumber resultatQuocient = new BigNumber("1");
@@ -211,7 +221,7 @@ public class BigNumber {
 
             BigNumber resta = new BigNumber("");
             resta = partDividend.sub(resultatQuocient);
-            resta.s = llevaZeros(resta.s);
+            //resta.s = llevaZeros(resta.s); //OJO!!!!!! ESTA FUNCION QUITA TODOS LOS CEROS SIEMPRE, LO QUE QUIERE DECIR QUE EN RESIDUOS EXACTOS ELIMINA ESOS CEROS!!
 
 
             resultatDivisio.s = resultatDivisio.s + quocient;
@@ -221,6 +231,8 @@ public class BigNumber {
             } else {
                 partDividend.s = resta.s + Character.toString(s1.charAt(posicionament));
             }
+            partDividend.s = llevaZeros(partDividend.s);
+            System.out.println(partDividend.s);
             posicionament++;
         }
         return resultatDivisio;
@@ -230,12 +242,31 @@ public class BigNumber {
         return new BigNumber("");
     }
 
-    BigNumber power(int other) {
-        return new BigNumber("");
+    BigNumber power(int n) {
+        BigNumber res = new BigNumber(this.s);
+        BigNumber base = new BigNumber(this.s);
+        BigNumber exponent = new BigNumber(Integer.toString(n));
+
+        if (n == 2) {
+            res = res.mult(res);
+        } else {
+            for (int i = 1; i < n; i++) {
+                res = res.mult(base);
+            }
+        }
+        return res;
     }
 
     BigNumber factorial() {
-        return new BigNumber("");
+        BigNumber res = new BigNumber("1");
+        BigNumber base = new BigNumber(this.s);
+        BigNumber aux = new BigNumber("");
+
+        for (int i = Integer.parseInt(base.s); i > 0; i--) {
+            aux.s = Integer.toString(i);
+            res = res.mult(aux);
+        }
+        return res;
     }
 
     BigNumber mcd(BigNumber other) {
