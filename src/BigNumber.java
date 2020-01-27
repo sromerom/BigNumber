@@ -239,6 +239,40 @@ public class BigNumber {
     }
 
     BigNumber sqrt() {
+        String s1 = this.s;
+        System.out.println(s1);
+        int posicionament = 0;
+
+        BigNumber xifraActual = new BigNumber(Character.toString(s1.charAt(posicionament)) + Character.toString(s1.charAt(posicionament + 1)));
+        BigNumber res = new BigNumber(xifraActual.s);
+        BigNumber resQuocient = new BigNumber("");
+        while (posicionament <= s1.length()) {
+            if (posicionament != 0) {
+                xifraActual = new BigNumber(Character.toString(s1.charAt(posicionament)) + Character.toString(s1.charAt(posicionament + 1)));
+                xifraActual.s = giraResultat(xifraActual.s);
+                res.s = giraResultat(xifraActual.s + res.s);
+            }
+            System.out.println(xifraActual);
+
+            String quocient = "";
+            BigNumber resta = new BigNumber("");
+            if (posicionament == 0) {
+                quocient = comprovarQuocient(res.s);
+                resQuocient.s = resQuocient + quocient;
+                resta = new BigNumber(quocient);
+            } else {
+                resta = new BigNumber(resQuocient.mult(new BigNumber("2")));
+                BigNumber aux = new BigNumber("1");
+                while (resta.compareTo(res) == -1) {
+
+                }
+            }
+
+            System.out.println(xifraActual + " - " + resta);
+            res = xifraActual.sub(resta.mult(resta));
+
+            posicionament += 2;
+        }
         return new BigNumber("");
     }
 
@@ -373,5 +407,26 @@ public class BigNumber {
         return res;
     }
 
+    public String comprovarQuocient(String s) {
+        BigNumber xifraComprovar = new BigNumber(s);
+        BigNumber result = new BigNumber("1");
+
+        int quocient = 1;
+        BigNumber resultatQuocient = new BigNumber("1");
+
+        System.out.println(resultatQuocient);
+        System.out.println(xifraComprovar);
+        while (resultatQuocient.compareTo(xifraComprovar) == -1) {
+            resultatQuocient = result.mult(result);
+
+
+            if (new BigNumber(Integer.toString(quocient + 1)).mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(xifraComprovar) == 1) {
+                break;
+            }
+            quocient++;
+            result.s = Integer.toString(quocient);
+        }
+        return Integer.toString(quocient);
+    }
 
 }
