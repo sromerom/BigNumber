@@ -8,6 +8,10 @@ public class BigNumberTest {
     public void comparacions() {
         BigNumber b1, b2;
 
+        b1 = new BigNumber("00");
+        b2 = new BigNumber("00");
+        assertEquals(0, b1.compareTo(b2));
+
         b1 = new BigNumber("2");
         b2 = new BigNumber("02");
         assertEquals(b1, b2);
@@ -268,16 +272,21 @@ public class BigNumberTest {
     public void arrels() {
         BigNumber b1;
 
+        /*
         b1 = new BigNumber("7584");
         assertEquals(new BigNumber("87"), b1.sqrt());
-
 
         b1 = new BigNumber("9");
         assertEquals(new BigNumber("3"), b1.sqrt());
 
+        b1 = new BigNumber("789");
+        assertEquals(new BigNumber("28"), b1.sqrt());
+
+
         b1 = new BigNumber("101");
         assertEquals(new BigNumber("10"), b1.sqrt());
 
+         */
         b1 = new BigNumber("43534526");
         assertEquals(new BigNumber("6598"), b1.sqrt());
 

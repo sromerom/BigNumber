@@ -242,38 +242,81 @@ public class BigNumber {
         String s1 = this.s;
         System.out.println(s1);
         int posicionament = 0;
+        String quocient = "";
+        BigNumber xifraActual = new BigNumber("");
+        boolean afegirNumParells = true;
 
-        BigNumber xifraActual = new BigNumber(Character.toString(s1.charAt(posicionament)) + Character.toString(s1.charAt(posicionament + 1)));
+
+        if (s1.length() == 1) {
+            xifraActual.s = Character.toString(s1.charAt(0));
+        } else {
+
+            if (s1.length() % 2 == 0) {
+                xifraActual.s = Character.toString(s1.charAt(posicionament)) + Character.toString(s1.charAt(posicionament + 1));
+            } else {
+                xifraActual.s = Character.toString(s1.charAt(posicionament));
+                afegirNumParells = false;
+            }
+        }
         BigNumber res = new BigNumber(xifraActual.s);
         BigNumber resQuocient = new BigNumber("");
-        while (posicionament <= s1.length()) {
+        while (posicionament < s1.length()) {
             if (posicionament != 0) {
                 xifraActual = new BigNumber(Character.toString(s1.charAt(posicionament)) + Character.toString(s1.charAt(posicionament + 1)));
-                xifraActual.s = giraResultat(xifraActual.s);
-                res.s = giraResultat(xifraActual.s + res.s);
-            }
-            System.out.println(xifraActual);
+                //xifraActual.s = giraResultat(xifraActual.s);
+                //res.s = giraResultat(res.s);
 
-            String quocient = "";
+                //xifraActual.s = xifraActual.s + res.s;
+                xifraActual.s = res.s + xifraActual;
+                afegirNumParells = true;
+            }
             BigNumber resta = new BigNumber("");
             if (posicionament == 0) {
-                quocient = comprovarQuocient(res.s);
+                quocient = comprovarQuocient(xifraActual.s);
                 resQuocient.s = resQuocient + quocient;
                 resta = new BigNumber(quocient);
             } else {
                 resta = new BigNumber(resQuocient.mult(new BigNumber("2")));
-                BigNumber aux = new BigNumber("1");
-                while (resta.compareTo(res) == -1) {
-
+                int aux = 1;
+                //BigNumber aux = new BigNumber("1");
+                BigNumber auxResult = new BigNumber(resta.s);
+                while (auxResult.compareTo(xifraActual) == -1) {
+                    //resta.s = resta.s + aux.s;
+                    //resta = resta.mult(aux);
+                    //aux.add(new BigNumber("1"));
+                    auxResult.s = resta.s;
+                    auxResult.s = auxResult.s + Integer.toString(aux);
+                    auxResult = auxResult.mult(new BigNumber(Integer.toString(aux)));
+                    if (new BigNumber(resta.s + Integer.toString(aux + 1)).mult(new BigNumber(Integer.toString(aux + 1))).compareTo(xifraActual) == 1) {
+                        break;
+                    }
+                    aux++;
                 }
+                quocient = quocient + Integer.toString(aux);
+                resta.s = auxResult.s;
             }
 
             System.out.println(xifraActual + " - " + resta);
-            res = xifraActual.sub(resta.mult(resta));
 
-            posicionament += 2;
+            if (posicionament == 0) {
+                res = xifraActual.sub(resta.mult(resta));
+            } else {
+                res = xifraActual.sub(resta);
+            }
+
+            if (res.compareTo(new BigNumber("0")) == 0) {
+                quocient = quocient + "0";
+                return new BigNumber(quocient);
+            }
+
+            if (afegirNumParells) {
+                posicionament += 2;
+            } else {
+                posicionament++;
+            }
+            res.s = llevaZeros(res.s);
         }
-        return new BigNumber("");
+        return new BigNumber(quocient);
     }
 
     BigNumber power(int n) {
