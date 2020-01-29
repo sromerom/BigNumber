@@ -245,7 +245,7 @@ public class BigNumber {
         String quocient = "";
         BigNumber xifraActual = new BigNumber("");
         boolean afegirNumParells = true;
-
+        boolean mesPetit = false;
 
         if (s1.length() == 1) {
             xifraActual.s = Character.toString(s1.charAt(0));
@@ -277,23 +277,36 @@ public class BigNumber {
                 resta = new BigNumber(quocient);
             } else {
                 resta = new BigNumber(resQuocient.mult(new BigNumber("2")));
-                int aux = 1;
-                //BigNumber aux = new BigNumber("1");
-                BigNumber auxResult = new BigNumber(resta.s);
-                while (auxResult.compareTo(xifraActual) == -1) {
-                    //resta.s = resta.s + aux.s;
-                    //resta = resta.mult(aux);
-                    //aux.add(new BigNumber("1"));
-                    auxResult.s = resta.s;
-                    auxResult.s = auxResult.s + Integer.toString(aux);
-                    auxResult = auxResult.mult(new BigNumber(Integer.toString(aux)));
-                    if (new BigNumber(resta.s + Integer.toString(aux + 1)).mult(new BigNumber(Integer.toString(aux + 1))).compareTo(xifraActual) == 1) {
-                        break;
+
+                if (new BigNumber(resta.s + "1").compareTo(xifraActual) == -1) {
+                    int aux = 1;
+                    //BigNumber aux = new BigNumber("1");
+                    BigNumber auxResult = new BigNumber(resta.s);
+                    while (auxResult.compareTo(xifraActual) == -1) {
+                        //resta.s = resta.s + aux.s;
+                        //resta = resta.mult(aux);
+                        //aux.add(new BigNumber("1"));
+                        auxResult.s = resta.s;
+                        auxResult.s = auxResult.s + Integer.toString(aux);
+                        auxResult = auxResult.mult(new BigNumber(Integer.toString(aux)));
+                        if (new BigNumber(resta.s + Integer.toString(aux + 1)).mult(new BigNumber(Integer.toString(aux + 1))).compareTo(xifraActual) == 1) {
+                            break;
+                        }
+                        aux++;
                     }
-                    aux++;
+                    quocient = quocient + Integer.toString(aux);
+                    resta.s = auxResult.s;
+                } else {
+                    quocient = quocient + "0";
+                    resQuocient.s = quocient;
+                    res.s = xifraActual.s;
+                    if (afegirNumParells) { //Codigo Bastante repetido!!
+                        posicionament += 2;
+                    } else {
+                        posicionament++;
+                    }
+                    continue;
                 }
-                quocient = quocient + Integer.toString(aux);
-                resta.s = auxResult.s;
             }
 
             System.out.println(xifraActual + " - " + resta);
@@ -304,17 +317,19 @@ public class BigNumber {
                 res = xifraActual.sub(resta);
             }
 
+            /*
             if (res.compareTo(new BigNumber("0")) == 0) {
                 quocient = quocient + "0";
                 return new BigNumber(quocient);
             }
-
+             */
             if (afegirNumParells) {
                 posicionament += 2;
             } else {
                 posicionament++;
             }
             res.s = llevaZeros(res.s);
+            resQuocient.s = quocient;
         }
         return new BigNumber(quocient);
     }
@@ -347,6 +362,7 @@ public class BigNumber {
     }
 
     BigNumber mcd(BigNumber other) {
+        
         return new BigNumber("");
     }
 
