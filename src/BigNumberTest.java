@@ -73,6 +73,10 @@ public class BigNumberTest {
     public void sumes() {
         BigNumber b1, b2;
 
+        b1 = new BigNumber("0");
+        b2 = new BigNumber("0");
+        assertEquals(new BigNumber("0"), b1.add(b2));
+
         b1 = new BigNumber("1A");
         b2 = new BigNumber("2A");
         assertEquals(new BigNumber("0"), b1.add(b2));
@@ -110,6 +114,15 @@ public class BigNumberTest {
     @Test
     public void restes() {
         BigNumber b1, b2;
+
+        b1 = new BigNumber("36");
+        b2 = new BigNumber("36");
+        assertEquals(new BigNumber("0"), b1.sub(b2));
+
+        b1 = new BigNumber("1500");
+        b2 = new BigNumber("1500");
+        assertEquals(new BigNumber("0"), b1.sub(b2));
+
 
         b1 = new BigNumber("60");
         b2 = new BigNumber("010");
@@ -226,9 +239,10 @@ public class BigNumberTest {
     @Test
     public void divisions() {
         BigNumber b1, b2;
-        b1 = new BigNumber("2754");
-        b2 = new BigNumber("9");
-        assertEquals(new BigNumber("306"), b1.div(b2));
+
+        b1 = new BigNumber("1");
+        b2 = new BigNumber("5");
+        assertEquals(new BigNumber("0"), b1.div(b2));
 
         b1 = new BigNumber("4653246");
         b2 = new BigNumber("65");
@@ -345,6 +359,10 @@ public class BigNumberTest {
     public void mcd() {
         BigNumber b1, b2;
 
+        b1 = new BigNumber("1032");
+        b2 = new BigNumber("180");
+        assertEquals(new BigNumber("12"), b1.mcd(b2));
+
         b1 = new BigNumber("155");
         b2 = new BigNumber("60");
         assertEquals(new BigNumber("5"), b1.mcd(b2));
@@ -357,9 +375,9 @@ public class BigNumberTest {
         b2 = new BigNumber("583453453452784");
         assertEquals(new BigNumber("4"), b1.mcd(b2));
 
-        //b1 = new BigNumber("2454563453452346787893523445675534535656678678356");
-        //b2 = new BigNumber("5");
-        //assertEquals(new BigNumber("1"), b1.mcd(b2));
+        b1 = new BigNumber("2454563453452346787893523445675534535656678678356");
+        b2 = new BigNumber("5");
+        assertEquals(new BigNumber("1"), b1.mcd(b2));
     }
 
 

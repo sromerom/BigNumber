@@ -219,19 +219,15 @@ public class BigNumber {
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
 
-        //Comprovam els numeros...
-        if (!numberCorrecte(s1) || !numberCorrecte(s2)) {
+        // En canvi si s1 es mes petit que s2, donara decimal. Es limitara ens retornar 0
+        if (new BigNumber(this.number).compareTo(new BigNumber(other.number)) == -1) {
             return new BigNumber("0");
         }
+
 
         // Si el dos numeros a dividir son exactament igual, el resultat sempre sera 1
         if (s1.equals(s2)) {
             return new BigNumber("1");
-        }
-
-        // En canvi si s1 es mes petit que s1, donara decimal. Es limitara ens retornar 0
-        if (s1.length() < s2.length()) {
-            return new BigNumber("0");
         }
 
 
@@ -445,17 +441,21 @@ public class BigNumber {
 
         BigNumber s1 = new BigNumber(this.number);
         BigNumber s2 = new BigNumber(other.number);
+        BigNumber resto = new BigNumber(s1.number);
 
-        // Per fer el calcul del maxim comu divisor s'ha fet servir l'algoritme d'euclides. Es aquest cas s'ha fet restant pero tambe es pot fer dividint
-        while (s1.compareTo(s2) != 0) {
-            if (s1.compareTo(s2) == -1) {
-                s2 = s2.sub(s1);
-            } else {
-                s1 = s1.sub(s2);
+        // Per fer el calcul del maxim comu divisor s'ha fet servir l'algoritme d'euclides. Es aquest cas s'ha fet dividint
+        while (true) {
+            resto = s1.sub(s1.div(s2).mult(s2));
+
+            String t = resto.number;
+            s1.number = s2.number;
+            s2.number = t;
+
+            if (s1.sub(s1.div(s2).mult(s2)).compareTo(new BigNumber("0")) == 0) {
+                break;
             }
         }
-
-        return s1;
+        return resto;
     }
 
     // Compara dos BigNumber. Torna 0 si són iguals, -1 si és menor i torna 1 si es major
@@ -555,6 +555,8 @@ public class BigNumber {
                 res.append(actualDigit);
             }
         }
+
+        if (res.toString().equals("")) return "0";
         return res.toString();
     }
 
@@ -594,7 +596,7 @@ public class BigNumber {
     public int calculaQuocient(BigNumber divisor, BigNumber part, boolean divisio) {
         int quocient = 1;
 
-        while(true) {
+        while (true) {
             //Si el resultat del següent quocient es passa feim un break i en quedam amb l'actual quocient (es fa un predicio)
 
             if (divisio) {
