@@ -362,8 +362,20 @@ public class BigNumber {
     }
 
     BigNumber mcd(BigNumber other) {
-        
-        return new BigNumber("");
+        BigNumber s1 = new BigNumber(this.s);
+        BigNumber s2 = new BigNumber(other.s);
+
+        while (s1.compareTo(s2) != 0) {
+            if (s1.compareTo(s2) == -1) {
+                //n2 -= n1;
+                s2 = s2.sub(s1);
+            } else {
+                //n1 -= n2;
+                s1 = s1.sub(s2);
+            }
+        }
+
+        return s1;
     }
 
     // Compara dos BigNumber. Torna 0 si són iguals, -1 si el primer és menor
