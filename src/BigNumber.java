@@ -15,6 +15,13 @@ public class BigNumber {
     BigNumber add(BigNumber other) {
         String res = "";
 
+        //Comprovam si els numeros introduits son correctes (si son nomes numeros)
+        //Ho farem amb el metode numberCorrecte()
+        if (!numberCorrecte(this.number) || !numberCorrecte(other.number)) {
+            return new BigNumber("0");
+        }
+
+
         //Assignam el string number dels dos objectes en dos variables diferents per tal de treballar millor amb ells i quedi mes clar. Si es dona el cas que aquest numero tengui
         // zero davant, els llevarem per poder fer l'operacio. Ho farem amb el metode llevarZeros()
         String s1 = llevaZeros(this.number);
@@ -71,6 +78,12 @@ public class BigNumber {
     BigNumber sub(BigNumber other) {
         String res = "";
 
+        //Comprovam els numeros...
+        if (!numberCorrecte(this.number) || !numberCorrecte(other.number)) {
+            return new BigNumber("0");
+        }
+
+
         // A igual que la suma, assignam el strings a s1 i s2. També llevarem el zeros si es que n'hi ha
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
@@ -126,9 +139,20 @@ public class BigNumber {
         BigNumber resultatMultiplicacio = new BigNumber("");
         BigNumber res = new BigNumber("0");
 
+        //Comprovam els numeros...
+        if (!numberCorrecte(this.number) || !numberCorrecte(other.number)) {
+            return new BigNumber("0");
+        }
+
+
         //Com fins ara, assignam els numeros a s1 i s2, llevant-li els possibles zeros
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
+
+        //Comprovam els numeros...
+        if (!numberCorrecte(s1) || !numberCorrecte(s2)) {
+            return new BigNumber("0");
+        }
 
         //Variable "operacio" per guardar l'operacio resultat, variable "ensLlevam" per saber quan hem de sumar al posterior operació i el BigNumber "res"
         // per guardar totes sumes dels resultats de les multiplicacions
@@ -185,9 +209,20 @@ public class BigNumber {
     // Divideix
     BigNumber div(BigNumber other) {
 
-        //Tornam a treballar amb s1 i s2
+        //Comprovam els numeros...
+        if (!numberCorrecte(this.number) || !numberCorrecte(other.number)) {
+            return new BigNumber("0");
+        }
+
+
+        //Tornam a treballar amb s1 i s2...
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
+
+        //Comprovam els numeros...
+        if (!numberCorrecte(s1) || !numberCorrecte(s2)) {
+            return new BigNumber("0");
+        }
 
         // Si el dos numeros a dividir son exactament igual, el resultat sempre sera 1
         if (s1.equals(s2)) {
@@ -233,24 +268,13 @@ public class BigNumber {
                 continue;
             }
 
-            int quocient = 1; // Aquesta int determinara quin es resultat del quocient
-            BigNumber resultatQuocient = new BigNumber("1"); // I aquest BigNumber determina el resultat d'anar provant diferents quocients
-
-            //Mentres el resultat que ens dona la prova d'anar multiplicant diferents quocients sigui mes petita que la part del dividend que estem treballant...
-            while (resultatQuocient.compareTo(partDividend) == -1) {
-                resultatQuocient = divisor.mult(new BigNumber(Integer.toString(quocient)));
-
-                //Si el resultat del següent quocient es passa feim un break i en quedam amb l'actual quocient (es fa un predicio)
-                if (divisor.mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(partDividend) == 1) {
-                    break;
-                }
-
-                quocient++;
-            }
+            //Cridam a la funcio calculaQuocient() per a que ens calculi l'actual quocient. Com que aquesta funcio pot calcular dos coses diferents, farem que
+            // calculi el quocient d'una divisio especificant al parametre boolean com true
+            int quocient = calculaQuocient(divisor, partDividend, true);
 
             //Feim la resta entre l'actual partDividend i el resultat que ens ha donat el quocient
             BigNumber resultatResta = new BigNumber("");
-            resultatResta = partDividend.sub(resultatQuocient);
+            resultatResta = partDividend.sub(divisor.mult(new BigNumber(Integer.toString(quocient))));
 
             //I guardam el quocient que hem aconseguit al BigNumber resultatDivisio
             resultatDivisio.number = resultatDivisio.number + quocient;
@@ -271,7 +295,13 @@ public class BigNumber {
     //ArrelQuadrada
     BigNumber sqrt() {
 
+        //Comprovam el numero...
+        if (!numberCorrecte(this.number)) {
+            return new BigNumber("0");
+        }
+
         String s1 = this.number;
+
         int posicionament = 0;
         BigNumber xifraActual = new BigNumber("");
         BigNumber res = new BigNumber(xifraActual.number);
@@ -303,8 +333,11 @@ public class BigNumber {
             // Si el posicionament es igual a zero, voldra dir que es la primera vegada. Per calcular arrels, la primera vegada simplement hem de encontrar un numero que multplicat
             // per si mateix s'aproximi al maxim a la xifraActual. Aixo només es fa la primera vegada. Desprès l'algoritme canvia un poc
             if (posicionament == 0) {
+
                 //Calculam el quocient que mes s'aproximi i el guardam en resQuocient (el resultat final)
-                quocient = comprovaQuocientArrels(xifraActual.number);
+                //Com que no volem calcular el quocient d'una divisio, especificarem que calcularem el quocient d'una arrel i ho farem assignant com a false el parametre boolea
+                // El primer parametre no ho s'utilitza
+                quocient = Integer.toString(calculaQuocient(new BigNumber(""), xifraActual, false));
                 resQuocient.number = resQuocient + quocient;
 
                 //El numero que restarem la primera vegada sempre sera el quocient multiplicat per si mateix
@@ -365,6 +398,12 @@ public class BigNumber {
 
     //Potencia
     BigNumber power(int n) {
+
+        //Comprovam el numero...
+        if (!numberCorrecte(this.number)) {
+            return new BigNumber("0");
+        }
+
         BigNumber res = new BigNumber(this.number);
         BigNumber base = new BigNumber(this.number);
 
@@ -378,6 +417,12 @@ public class BigNumber {
 
     //Factorial
     BigNumber factorial() {
+
+        //Comprovam el numero...
+        if (!numberCorrecte(this.number)) {
+            return new BigNumber("0");
+        }
+
         BigNumber res = new BigNumber("1");
         BigNumber base = new BigNumber(this.number);
 
@@ -392,6 +437,12 @@ public class BigNumber {
 
     //MCD. Torna el Maxim Comu Divisor
     BigNumber mcd(BigNumber other) {
+
+        //Comprovam els numeros...
+        if (!numberCorrecte(this.number) || !numberCorrecte(other.number)) {
+            return new BigNumber("0");
+        }
+
         BigNumber s1 = new BigNumber(this.number);
         BigNumber s2 = new BigNumber(other.number);
 
@@ -413,6 +464,11 @@ public class BigNumber {
         //Treballam amb s1 i s2...
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
+
+        //Comprovam els numeros... Torna 2 si el numero no es correcte!!
+        if (!numberCorrecte(s1) || !numberCorrecte(s2)) {
+            return 2;
+        }
 
         //Si s1 es major a s2 directament retornam 1
         if (s1.length() > s2.length()) {
@@ -471,6 +527,18 @@ public class BigNumber {
 
     //Metodes propis
 
+    //Comprova que el numero introduit sigui correcte. Retorn false si no lo es i true si ho es
+    public boolean numberCorrecte(String s) {
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) < 47 || s.charAt(i) > 57) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     //Torna un string amb tots el zeros inicial llevats
     public String llevaZeros(String s) {
 
@@ -521,25 +589,26 @@ public class BigNumber {
         return res.toString();
     }
 
-    //Funcio que ens determina quin es el quocient d'un numero
-    public String comprovaQuocientArrels(String s) {
-        BigNumber xifraComprovar = new BigNumber(s);
-        BigNumber result = new BigNumber("1");
-
+    //Funcio que ens determina quin es el quocient d'un numero. Funciona tant per divisions com per aconseguir el primer quocient dels arrels
+    //Si la volem fer servir per divisio posarem el boolean divisio true. Si volem calcular el quocient de l'arrel el divisor ho posarem a 0 i el boolean divisio a false
+    public int calculaQuocient(BigNumber divisor, BigNumber part, boolean divisio) {
         int quocient = 1;
-        BigNumber resultatQuocient = new BigNumber("1");
 
-        while (resultatQuocient.compareTo(xifraComprovar) == -1) {
-            resultatQuocient = result.mult(result);
+        while(true) {
+            //Si el resultat del següent quocient es passa feim un break i en quedam amb l'actual quocient (es fa un predicio)
 
-            if (new BigNumber(Integer.toString(quocient + 1)).mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(xifraComprovar) == 1) {
-                break;
+            if (divisio) {
+                if (divisor.mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(part) == 1) {
+                    break;
+                }
+            } else {
+                if (new BigNumber(Integer.toString(quocient + 1)).mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(part) == 1) {
+                    break;
+                }
             }
-
             quocient++;
-            result.number = Integer.toString(quocient);
         }
-        return Integer.toString(quocient);
-    }
 
+        return quocient;
+    }
 }
