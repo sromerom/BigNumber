@@ -45,7 +45,7 @@ public class BigNumber {
             if (sumaActual < 10) {
                 res = res + sumaActual;
 
-            // Si la suma es major a 10 i no es l'ultim digit (o columna) de l'operacio, voldra dir que haurem de guardar el que ens llevam per sumar a la següent suma de numeros.
+                // Si la suma es major a 10 i no es l'ultim digit (o columna) de l'operacio, voldra dir que haurem de guardar el que ens llevam per sumar a la següent suma de numeros.
             } else if (i < s1.length()) {
 
                 //Començam a separar el digit resultant en unitat i desenes. Aquest digit sempre sera un digit entre 10 i 99
@@ -57,8 +57,8 @@ public class BigNumber {
                 res = res + unitat;
                 ensLlevam = desena;
 
-            // Si la suma es major a 10 i es final de la suma (l'ultima columna), simplement assignarem el resultat de la suma complet. Aquest resultat ho haurem de girar i ho farem
-            // amb el metode giraResultat()
+                // Si la suma es major a 10 i es final de la suma (l'ultima columna), simplement assignarem el resultat de la suma complet. Aquest resultat ho haurem de girar i ho farem
+                // amb el metode giraResultat()
             } else if (i == s1.length()) {
                 res = res + giraResultat(Integer.toString(sumaActual));
             }
@@ -100,14 +100,14 @@ public class BigNumber {
                     operacio = (actualXifraS1 + 10 - restarem) - actualXifraS2;
                     restarem = 1;
 
-                //Si no ens hem portat per restar, farem l'operacio resta normal (tenint en compte si hem de restar un extra a causa de l'operacio anterior)
-                // Quan fa l'operacio, seguidament posam a 0 "restarem"
+                    //Si no ens hem portat per restar, farem l'operacio resta normal (tenint en compte si hem de restar un extra a causa de l'operacio anterior)
+                    // Quan fa l'operacio, seguidament posam a 0 "restarem"
                 } else {
                     operacio = (actualXifraS1 - restarem) - actualXifraS2;
                     restarem = 0;
                 }
 
-            //Si es numero d'abaix es major al d'adalt, si o si haurem de llevar-nos 1 per restar. I per poder fer l'operacio sumarem 10
+                //Si es numero d'abaix es major al d'adalt, si o si haurem de llevar-nos 1 per restar. I per poder fer l'operacio sumarem 10
             } else {
                 operacio = (actualXifraS1 + 10 - restarem) - actualXifraS2;
                 restarem = 1;
@@ -136,7 +136,6 @@ public class BigNumber {
         int ensLlevam = 0;
 
 
-
         for (int i = 1; i < s2.length() + 1; i++) {
             //Cada vegada que canviam de numero a la fila d'abaix (si es que hi ha més d'un), posam el resultat buit i aconseguim el numero el qual el multiplicarem amb
             // la fila d'adalt
@@ -158,7 +157,7 @@ public class BigNumber {
                 if (operacio < 10) {
                     resultatMultiplicacio.number = resultatMultiplicacio.number + operacio;
 
-                //mentres j sigui menor al tamany de s1 (fila d'adalt), haurem de aconsguir la desena i la unitat, i anar llevant-nos la desena i guardar la unitat a resultatMultiplicacio
+                    //mentres j sigui menor al tamany de s1 (fila d'adalt), haurem de aconsguir la desena i la unitat, i anar llevant-nos la desena i guardar la unitat a resultatMultiplicacio
                 } else if (j < s1.length()) {
                     String seperaDigits = Integer.toString(operacio);
                     int desena = Character.getNumericValue(seperaDigits.charAt(0));
@@ -269,6 +268,7 @@ public class BigNumber {
         return resultatDivisio;
     }
 
+    //ArrelQuadrada
     BigNumber sqrt() {
 
         String s1 = this.number;
@@ -342,7 +342,7 @@ public class BigNumber {
                     resQuocient.number = quocient;
 
                     res.number = xifraActual.number;
-                    posicionament+=2;
+                    posicionament += 2;
                     continue;
                 }
             }
@@ -354,7 +354,7 @@ public class BigNumber {
             if (xifraActual.number.length() % 2 != 0 && posicionament == 0) {
                 posicionament++;
             } else {
-                posicionament+=2;
+                posicionament += 2;
             }
 
             //Important afegir el resultat que ens ha donat el quocient al BigNumber resQuocient
@@ -363,36 +363,39 @@ public class BigNumber {
         return resQuocient;
     }
 
+    //Potencia
     BigNumber power(int n) {
         BigNumber res = new BigNumber(this.number);
         BigNumber base = new BigNumber(this.number);
 
-        if (n == 2) {
-            res = res.mult(res);
-        } else {
-            for (int i = 1; i < n; i++) {
-                res = res.mult(base);
-            }
+        //Feim un bucle que vagi multiplicant el BigNumber tantes vegades com n indiqui
+        for (int i = 1; i < n; i++) {
+            res = res.mult(base);
         }
+
         return res;
     }
 
+    //Factorial
     BigNumber factorial() {
         BigNumber res = new BigNumber("1");
         BigNumber base = new BigNumber(this.number);
 
+        //Feim un altre bucle que vagi multiplicant res per la variable i. Quan acabi el bucle, la variable i haura passat per tots els numeros necessaris per fer el factorial
+        // d'aquell numero
         for (int i = 1; i < Integer.parseInt(base.number) + 1; i++) {
             res = res.mult(new BigNumber(Integer.toString(i)));
         }
 
-
         return res;
     }
 
+    //MCD. Torna el Maxim Comu Divisor
     BigNumber mcd(BigNumber other) {
         BigNumber s1 = new BigNumber(this.number);
         BigNumber s2 = new BigNumber(other.number);
 
+        // Per fer el calcul del maxim comu divisor s'ha fet servir l'algoritme d'euclides. Es aquest cas s'ha fet restant pero tambe es pot fer dividint
         while (s1.compareTo(s2) != 0) {
             if (s1.compareTo(s2) == -1) {
                 s2 = s2.sub(s1);
@@ -404,11 +407,10 @@ public class BigNumber {
         return s1;
     }
 
-    // Compara dos BigNumber. Torna 0 si són iguals, -1 si el primer és menor
-    // i torna 1 si el segon és menor
+    // Compara dos BigNumber. Torna 0 si són iguals, -1 si és menor i torna 1 si es major
     public int compareTo(BigNumber other) {
 
-        //Treballam amb s1 i s1...
+        //Treballam amb s1 i s2...
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
 
@@ -459,11 +461,17 @@ public class BigNumber {
     }
 
     //Getters and Setters
-    public String getNumber() { return number; }
+    public String getNumber() {
+        return number;
+    }
 
-    public void setNumber(String number) { this.number = number; }
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
     //Metodes propis
+
+    //Torna un string amb tots el zeros inicial llevats
     public String llevaZeros(String s) {
 
         StringBuilder res = new StringBuilder();
@@ -482,6 +490,7 @@ public class BigNumber {
         return res.toString();
     }
 
+    //Torna un string amb la quantitat de zeros que l'hi indiquem. Aquest zeros s'afegeixen al final del string passat
     public String afegeixZeros(String s, int quantitatZeros) {
         StringBuilder res = new StringBuilder(s);
         res.append("0".repeat(Math.max(0, quantitatZeros)));
@@ -489,6 +498,7 @@ public class BigNumber {
         return res.toString();
     }
 
+    //Torna un string amb la quantitat de zeros necessaris per fer que les operacions tenguin el mateix tamany. Util per suma i resta
     public String preparaOperacio(String s, int maxim) {
         StringBuilder res = new StringBuilder();
         int afegir = maxim - s.length();
@@ -501,6 +511,7 @@ public class BigNumber {
         return res.toString();
     }
 
+    //Torna un string amb el string que l'hi passam per parametre totalment girat
     public String giraResultat(String s) {
         StringBuilder res = new StringBuilder();
         for (int i = 1; i < s.length() + 1; i++) {
@@ -510,6 +521,7 @@ public class BigNumber {
         return res.toString();
     }
 
+    //Funcio que ens determina quin es el quocient d'un numero
     public String comprovaQuocientArrels(String s) {
         BigNumber xifraComprovar = new BigNumber(s);
         BigNumber result = new BigNumber("1");
@@ -520,10 +532,10 @@ public class BigNumber {
         while (resultatQuocient.compareTo(xifraComprovar) == -1) {
             resultatQuocient = result.mult(result);
 
-
             if (new BigNumber(Integer.toString(quocient + 1)).mult(new BigNumber(Integer.toString(quocient + 1))).compareTo(xifraComprovar) == 1) {
                 break;
             }
+
             quocient++;
             result.number = Integer.toString(quocient);
         }

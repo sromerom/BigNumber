@@ -303,6 +303,9 @@ public class BigNumberTest {
     public void potencies() {
         BigNumber b1;
 
+        b1 = new BigNumber("6");
+        assertEquals(new BigNumber("6"), b1.power(1));
+
         b1 = new BigNumber("5");
         assertEquals(new BigNumber("25"), b1.power(2));
 
