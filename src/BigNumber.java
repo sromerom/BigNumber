@@ -31,7 +31,7 @@ public class BigNumber {
         // a sumar siguin exactament d'igual tamany sempre, a més de no alterar la suma final
         if (s1.length() > s2.length()) {
             s2 = preparaOperacio(s2, s1.length());
-        } else if (s1.length() < s2.length()) {
+        } else {
             s1 = preparaOperacio(s1, s2.length());
         }
 
@@ -41,11 +41,11 @@ public class BigNumber {
         for (int i = 1; i < s1.length() + 1; i++) {
 
             //Aconsguim els numeros de la columna a sumar (Podem emprar int perque sempre sera un numero d'un digit)
-            int actualXifraS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
-            int actualXifraS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
+            int columnaS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
+            int columnaS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
 
             //Una vegada tenim els dos numeros començar a operar
-            int sumaActual = actualXifraS1 + actualXifraS2 + ensLlevam;
+            int sumaActual = columnaS1 + columnaS2 + ensLlevam;
             ensLlevam = 0;
 
             // Si la suma dels dos numeros anteriors es menor a 10 voldra dir que no ens llevarem cap i no fara sumar un extra a l'operacio següent.
@@ -66,12 +66,12 @@ public class BigNumber {
 
                 // Si la suma es major a 10 i es final de la suma (l'ultima columna), simplement assignarem el resultat de la suma complet. Aquest resultat ho haurem de girar i ho farem
                 // amb el metode giraResultat()
-            } else if (i == s1.length()) {
+            } else {
                 res = res + giraResultat(Integer.toString(sumaActual));
             }
         }
 
-        return new BigNumber(llevaZeros(giraResultat(res)));
+        return new BigNumber(giraResultat(res));
     }
 
     // Resta
@@ -99,30 +99,30 @@ public class BigNumber {
         for (int i = 1; i < s1.length() + 1; i++) {
 
             //Aconsguirem els dos numeros que operarem. Com en la suma, aquest numeros no mes serà d'una xifra i no passa res si treballam amb int
-            int actualXifraS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
-            int actualXifraS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
+            int columnaS1 = Character.getNumericValue(s1.charAt(s1.length() - i));
+            int columnaS2 = Character.getNumericValue(s2.charAt(s2.length() - i));
 
             int operacio = 0;
 
             //Si el numero d'adalt es major o igual al numero d'abaix, simplement farem un resta normal i corrent
-            if (actualXifraS1 == actualXifraS2 || actualXifraS1 > actualXifraS2) {
+            if (columnaS1 == columnaS2 || columnaS1 > columnaS2) {
 
                 //Si es dona el cas que hem de restar  a causa d'una operacio anterior, i el resultat de la resta es igual a 0 (o els dos numeros a restar son iguals)
                 // doncs haurem de sumar 10 per poder restar els que ens llevam. En aquest cas ens llevarem 1 per restar posterior
-                if (actualXifraS1 == actualXifraS2 && restarem == 1) {
-                    operacio = (actualXifraS1 + 10 - restarem) - actualXifraS2;
+                if (columnaS1 == columnaS2 && restarem == 1) {
+                    operacio = (columnaS1 + 10 - restarem) - columnaS2;
                     restarem = 1;
 
                     //Si no ens hem portat per restar, farem l'operacio resta normal (tenint en compte si hem de restar un extra a causa de l'operacio anterior)
                     // Quan fa l'operacio, seguidament posam a 0 "restarem"
                 } else {
-                    operacio = (actualXifraS1 - restarem) - actualXifraS2;
+                    operacio = (columnaS1 - restarem) - columnaS2;
                     restarem = 0;
                 }
 
                 //Si es numero d'abaix es major al d'adalt, si o si haurem de llevar-nos 1 per restar. I per poder fer l'operacio sumarem 10
             } else {
-                operacio = (actualXifraS1 + 10 - restarem) - actualXifraS2;
+                operacio = (columnaS1 + 10 - restarem) - columnaS2;
                 restarem = 1;
 
             }
@@ -144,15 +144,9 @@ public class BigNumber {
             return new BigNumber("0");
         }
 
-
         //Com fins ara, assignam els numeros a s1 i s2, llevant-li els possibles zeros
         String s1 = llevaZeros(this.number);
         String s2 = llevaZeros(other.number);
-
-        //Comprovam els numeros...
-        if (!numberCorrecte(s1) || !numberCorrecte(s2)) {
-            return new BigNumber("0");
-        }
 
         //Variable "operacio" per guardar l'operacio resultat, variable "ensLlevam" per saber quan hem de sumar al posterior operació i el BigNumber "res"
         // per guardar totes sumes dels resultats de les multiplicacions
@@ -180,6 +174,7 @@ public class BigNumber {
                 //Si l'operacio resultant es menor a 10, voldra dir que no hem de llevar-nos resultatMultiplicacio. Simplement assignam l'operacio resultant a la variable "resultatMultiplicacio"
                 if (operacio < 10) {
                     resultatMultiplicacio.number = resultatMultiplicacio.number + operacio;
+
 
                     //mentres j sigui menor al tamany de s1 (fila d'adalt), haurem de aconsguir la desena i la unitat, i anar llevant-nos la desena i guardar la unitat a resultatMultiplicacio
                 } else if (j < s1.length()) {
@@ -308,17 +303,11 @@ public class BigNumber {
             return new BigNumber("0");
         }
 
-        // Si el tamany del numero es d'un digit, nomes farem un charAt de 0
-        if (s1.length() == 1) {
+        // Si el tamany del numero es d'un digit o el numero es senar, nomes farem un charAt de 0
+        if (s1.length() % 2 != 0) {
             xifraActual.number = Character.toString(s1.charAt(0));
-        } else { // Si el tamany es major a 1, haurem de determinar si es parell o senar
-
-            if (s1.length() % 2 == 0) { // Si es parell, el numero inicial constara de dos numeros, per tant, de 0 i 1
+        } else { // Si no compleix lo anterior voldra dir que es parell, per tant el numero inicial constara de dos numeros
                 xifraActual.number = Character.toString(s1.charAt(0)) + Character.toString(s1.charAt(1));
-            } else { // I si es senar, només agafarem un, charAt(0)
-                xifraActual.number = Character.toString(s1.charAt(0));
-            }
-
         }
 
         String quocient = "";
@@ -379,7 +368,8 @@ public class BigNumber {
             //Restam la xifraActual amb el resultat que ens ha donat operacioResta
             res = xifraActual.sub(operacioResta);
 
-            //Si al principi (posicionament == 0), la xifraActual es només un (a causa de que el numero), augmentarem el posicionament en un, sino, augmentarem en dos el posicionament
+            //Si al principi (posicionament == 0), la xifraActual.length es només un (a causa de que el numero es senae), augmentarem el posicionament en un,
+            // sino, augmentarem en dos el posicionament
             if (xifraActual.number.length() % 2 != 0 && posicionament == 0) {
                 posicionament++;
             } else {
@@ -496,7 +486,7 @@ public class BigNumber {
 
     // Torna un String representant el número
     public String toString() {
-        return this.getNumber();
+        return this.number;
     }
 
     // Mira si dos objectes BigNumber són iguals
@@ -514,15 +504,6 @@ public class BigNumber {
             }
         }
         return false;
-    }
-
-    //Getters and Setters
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     //Metodes propis
@@ -562,17 +543,14 @@ public class BigNumber {
 
     //Torna un string amb la quantitat de zeros que l'hi indiquem. Aquest zeros s'afegeixen al final del string passat
     public String afegeixZeros(String s, int quantitatZeros) {
-        StringBuilder res = new StringBuilder(s);
-        res.append("0".repeat(Math.max(0, quantitatZeros)));
-
-        return res.toString();
+        return s + "0".repeat(quantitatZeros);
     }
 
     //Torna un string amb la quantitat de zeros necessaris per fer que les operacions tenguin el mateix tamany. Util per suma i resta
     public String preparaOperacio(String s, int maxim) {
         StringBuilder res = new StringBuilder();
         int afegir = maxim - s.length();
-        res.append("0".repeat(Math.max(0, afegir)));
+        res.append("0".repeat(afegir));
 
         for (int i = 0; i < s.length(); i++) {
             String actualXifra = Character.toString(s.charAt(i));

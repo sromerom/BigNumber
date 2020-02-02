@@ -240,6 +240,10 @@ public class BigNumberTest {
     public void divisions() {
         BigNumber b1, b2;
 
+        b1 = new BigNumber("2754");
+        b2 = new BigNumber("9");
+        assertEquals(new BigNumber("306"), b1.div(b2));
+
         b1 = new BigNumber("1");
         b2 = new BigNumber("5");
         assertEquals(new BigNumber("0"), b1.div(b2));
